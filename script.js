@@ -58,6 +58,15 @@ function criarCarrossel({ container, itens, setaEsq, setaDir }) {
   setaDir.addEventListener('click', () => irPara(indexAtual + 1));
   setaEsq.addEventListener('click', () => irPara(indexAtual - 1));
 
+  container.addEventListener('scroll', () => {
+    const maisProximo = [...itens].reduce((p, c) =>
+      Math.abs(c.offsetLeft - container.scrollLeft) < Math.abs(p.offsetLeft - container.scrollLeft) ? c : p
+    );
+    indexAtual = [...itens].indexOf(maisProximo);
+    setSeta(setaEsq, indexAtual > 0);
+    setSeta(setaDir, indexAtual < itens.length - 1);
+  });
+
   irPara(0);
 }
 
