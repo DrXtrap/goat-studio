@@ -15,21 +15,30 @@
    CORES E FONTES GLOBAIS
 ================================ */
 body {
-  background-color: #0a0a0a;   /* preto quase total */
-  color: #e0e0e0;               /* branco suave pro texto */
+  background-color: #0a0a0a;
+  color: #e0e0e0;
   font-family: Arial, sans-serif;
   font-size: 16px;
+  padding-top: 96px;
 }
 
 /* ================================
    HEADER — barra do topo
 ================================ */
 header {
-  display: flex;                /* coloca logo e menu lado a lado */
-  justify-content: space-between; /* logo na esquerda, menu na direita */
-  align-items: center;          /* alinha verticalmente no centro */
-  padding: 24px 48px;           /* espaço interno: cima/baixo e lados */
-  border-bottom: 1px solid #222; /* linha sutil embaixo */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 48px;
+  border-bottom: 1px solid #222;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 999;
+  background: rgba(10, 10, 10, 0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 header h1 {
@@ -624,8 +633,7 @@ h1, h2 {
 @media (max-width: 900px) {
 
   header {
-    padding: 24px;
-    position: relative;
+    padding: 16px 24px;
   }
 
   .menu-toggle {
