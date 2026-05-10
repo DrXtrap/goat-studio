@@ -314,7 +314,6 @@ h1, h2 {
   border: none;
 }
 
-/* CONTATO */
 .contato-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
