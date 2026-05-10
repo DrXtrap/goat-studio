@@ -101,7 +101,9 @@ function enviarPauseYouTube(iframe) {
 }
 
 function recarregarIframe(iframe) {
-  iframe.src = iframe.src;
+  const src = iframe.src;
+  iframe.src = '';
+  requestAnimationFrame(() => { iframe.src = src; });
 }
 
 function pausarOutrosYouTube(janelaTocando) {
@@ -125,7 +127,9 @@ window.addEventListener('message', (e) => {
   try { data = JSON.parse(e.data); } catch { return; }
 
   const spotifyComecou = data.type === 'playback_update' && data.payload && !data.payload.isPaused;
-  const youtubeComecou = data.event === 'infoDelivery' && data.info?.playerState === 1;
+  const youtubeComecou =
+    (data.event === 'infoDelivery' && data.info?.playerState === 1) ||
+    (data.event === 'onStateChange' && data.info === 1);
 
   if (spotifyComecou) {
     pararOutrosSpotify(e.source);
