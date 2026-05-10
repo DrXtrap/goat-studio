@@ -156,6 +156,10 @@ footer {
   margin-bottom: 12px;
 }
 
+.hero-content h2::after {
+  display: none;
+}
+
 .hero-content p {
   font-size: 13px;
   letter-spacing: 4px;
