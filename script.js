@@ -168,32 +168,36 @@ atualizarSetasArtistas();
    PARAR MÍDIA AO TROCAR
 ================================ */
 
-document.querySelectorAll('iframe[src*="youtube.com/embed"]').forEach(function(iframe) {
-  if (!iframe.src.includes('enablejsapi')) {
-    iframe.src += (iframe.src.includes('?') ? '&' : '?') + 'enablejsapi=1';
-  }
-});
+function pausarTodosYouTube(exceto) {
+  document.querySelectorAll('iframe[src*="youtube"]').forEach(function(iframe) {
+    if (iframe.contentWindow !== exceto) {
+      iframe.contentWindow.postMessage(
+        JSON.stringify({ event: 'command', func: 'pauseVideo', args: '' }), '*'
+      );
+    }
+  });
+}
+
+function pararTodosSpotify(exceto) {
+  document.querySelectorAll('iframe[src*="spotify"]').forEach(function(iframe) {
+    if (iframe.contentWindow !== exceto) {
+      iframe.src = iframe.src;
+    }
+  });
+}
 
 window.addEventListener('message', function(e) {
   var data;
   try { data = JSON.parse(e.data); } catch(err) { return; }
 
   if (data.type === 'playback_update' && data.payload && !data.payload.isPaused) {
-    document.querySelectorAll('iframe[src*="spotify"]').forEach(function(iframe) {
-      if (iframe.contentWindow !== e.source) {
-        iframe.src = iframe.src;
-      }
-    });
+    pararTodosSpotify(e.source);
+    pausarTodosYouTube(null);
   }
 
   if (data.event === 'infoDelivery' && data.info && data.info.playerState === 1) {
-    document.querySelectorAll('iframe[src*="youtube"]').forEach(function(iframe) {
-      if (iframe.contentWindow !== e.source) {
-        iframe.contentWindow.postMessage(
-          JSON.stringify({ event: 'command', func: 'pauseVideo', args: '' }), '*'
-        );
-      }
-    });
+    pausarTodosYouTube(e.source);
+    pararTodosSpotify(null);
   }
 });
 
