@@ -15,6 +15,12 @@ function animarScroll(container, destino) {
   requestAnimationFrame(passo);
 }
 
+function encontrarMaisProximo(container, itens) {
+  return [...itens].reduce((p, c) =>
+    Math.abs(c.offsetLeft - container.scrollLeft) < Math.abs(p.offsetLeft - container.scrollLeft) ? c : p
+  );
+}
+
 function criarCarrossel({ container, itens, setaEsq, setaDir }) {
   let indexAtual = 0;
 
@@ -43,10 +49,7 @@ function criarCarrossel({ container, itens, setaEsq, setaDir }) {
     if (!arrastando) return;
     arrastando = false;
     container.style.cursor = 'grab';
-    const maisProximo = [...itens].reduce((p, c) =>
-      Math.abs(c.offsetLeft - container.scrollLeft) < Math.abs(p.offsetLeft - container.scrollLeft) ? c : p
-    );
-    irPara([...itens].indexOf(maisProximo));
+    irPara([...itens].indexOf(encontrarMaisProximo(container, itens)));
   });
 
   document.addEventListener('mousemove', (e) => {
@@ -59,10 +62,7 @@ function criarCarrossel({ container, itens, setaEsq, setaDir }) {
   setaEsq.addEventListener('click', () => irPara(indexAtual - 1));
 
   container.addEventListener('scroll', () => {
-    const maisProximo = [...itens].reduce((p, c) =>
-      Math.abs(c.offsetLeft - container.scrollLeft) < Math.abs(p.offsetLeft - container.scrollLeft) ? c : p
-    );
-    indexAtual = [...itens].indexOf(maisProximo);
+    indexAtual = [...itens].indexOf(encontrarMaisProximo(container, itens));
     setSeta(setaEsq, indexAtual > 0);
     setSeta(setaDir, indexAtual < itens.length - 1);
   });
