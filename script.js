@@ -1,231 +1,147 @@
-const grid = document.querySelector('#clipes .videos-grid');
-const itens = document.querySelectorAll('.video-item');
-const setaDireita = document.querySelector('.seta-direita');
-const setaEsquerda = document.querySelector('.seta-esquerda');
-let indexAtual = 0;
+const DURACAO_SCROLL = 600;
 
-// Animação suave manual
-function scrollSuave(destino) {
-  const inicio = grid.scrollLeft;
+function animarScroll(container, destino) {
+  const inicio = container.scrollLeft;
   const distancia = destino - inicio;
-  const duracao = 600;
   let startTime = null;
 
-  function animar(timestamp) {
+  function passo(timestamp) {
     if (!startTime) startTime = timestamp;
-    const progresso = timestamp - startTime;
-    const porcentagem = Math.min(progresso / duracao, 1);
-    const ease = 1 - Math.pow(1 - porcentagem, 3);
-    grid.scrollLeft = inicio + distancia * ease;
-    if (progresso < duracao) requestAnimationFrame(animar);
+    const progresso = Math.min((timestamp - startTime) / DURACAO_SCROLL, 1);
+    container.scrollLeft = inicio + distancia * (1 - Math.pow(1 - progresso, 3));
+    if (progresso < 1) requestAnimationFrame(passo);
   }
 
-  requestAnimationFrame(animar);
+  requestAnimationFrame(passo);
 }
 
-// Arrastar com clique
-let isDragging = false;
-let startX;
-let scrollStart;
+function criarCarrossel({ container, itens, setaEsq, setaDir }) {
+  let indexAtual = 0;
 
-grid.addEventListener('mousedown', function(e) {
-  isDragging = true;
-  startX = e.pageX - grid.offsetLeft;
-  scrollStart = grid.scrollLeft;
-  grid.style.cursor = 'grabbing';
-});
-
-document.addEventListener('mouseup', function() {
-  if (!isDragging) return;
-  isDragging = false;
-  grid.style.cursor = 'grab';
-
-  const itemMaisProximo = [...itens].reduce(function(prev, curr) {
-    const distPrev = Math.abs(prev.offsetLeft - grid.scrollLeft);
-    const distCurr = Math.abs(curr.offsetLeft - grid.scrollLeft);
-    return distCurr < distPrev ? curr : prev;
-  });
-
-  indexAtual = [...itens].indexOf(itemMaisProximo);
-  scrollSuave(itemMaisProximo.offsetLeft);
-  atualizarSetas();
-});
-
-document.addEventListener('mousemove', function(e) {
-  if (!isDragging) return;
-  e.preventDefault();
-  const x = e.pageX - grid.offsetLeft;
-  const walk = (x - startX) * 2;
-  grid.scrollLeft = scrollStart - walk;
-});
-
-// Setas
-setaDireita.addEventListener('click', function() {
-  if (indexAtual < itens.length - 1) indexAtual++;
-  scrollSuave(itens[indexAtual].offsetLeft);
-  atualizarSetas();
-});
-
-setaEsquerda.addEventListener('click', function() {
-  if (indexAtual > 0) indexAtual--;
-  scrollSuave(itens[indexAtual].offsetLeft);
-  atualizarSetas();
-});
-
-// Esconde setas
-function atualizarSetas() {
-  const noInicio = indexAtual === 0;
-  const noFim = indexAtual === itens.length - 1;
-
-  setaEsquerda.style.opacity = noInicio ? '0' : '1';
-  setaEsquerda.style.pointerEvents = noInicio ? 'none' : 'all';
-
-  setaDireita.style.opacity = noFim ? '0' : '1';
-  setaDireita.style.pointerEvents = noFim ? 'none' : 'all';
-}
-
-grid.addEventListener('scroll', atualizarSetas);
-atualizarSetas();
-
-// Carrossel de artistas
-const gridArtistas = document.querySelector('.artistas-carrossel');
-const itensArtistas = document.querySelectorAll('.artista-card');
-const setaMusicaDireita = document.querySelector('.seta-musica-direita');
-const setaMusicaEsquerda = document.querySelector('.seta-musica-esquerda');
-let indexArtista = 0;
-
-function scrollSuaveArtistas(destino) {
-  const inicio = gridArtistas.scrollLeft;
-  const distancia = destino - inicio;
-  const duracao = 600;
-  let startTime = null;
-
-  function animar(timestamp) {
-    if (!startTime) startTime = timestamp;
-    const progresso = timestamp - startTime;
-    const ease = 1 - Math.pow(1 - Math.min(progresso / duracao, 1), 3);
-    gridArtistas.scrollLeft = inicio + distancia * ease;
-    if (progresso < duracao) requestAnimationFrame(animar);
+  function setSeta(seta, visivel) {
+    seta.style.opacity = visivel ? '1' : '0';
+    seta.style.pointerEvents = visivel ? 'all' : 'none';
   }
 
-  requestAnimationFrame(animar);
-}
-
-// Drag artistas
-let isDraggingArtistas = false;
-let startXArtistas;
-let scrollStartArtistas;
-
-gridArtistas.addEventListener('mousedown', function(e) {
-  isDraggingArtistas = true;
-  startXArtistas = e.pageX - gridArtistas.offsetLeft;
-  scrollStartArtistas = gridArtistas.scrollLeft;
-  gridArtistas.style.cursor = 'grabbing';
-});
-
-document.addEventListener('mouseup', function() {
-  if (!isDraggingArtistas) return;
-  isDraggingArtistas = false;
-  gridArtistas.style.cursor = 'grab';
-
-  const itemMaisProximo = [...itensArtistas].reduce(function(prev, curr) {
-    return Math.abs(curr.offsetLeft - gridArtistas.scrollLeft) < Math.abs(prev.offsetLeft - gridArtistas.scrollLeft) ? curr : prev;
-  });
-
-  indexArtista = [...itensArtistas].indexOf(itemMaisProximo);
-  scrollSuaveArtistas(itemMaisProximo.offsetLeft);
-  atualizarSetasArtistas();
-});
-
-document.addEventListener('mousemove', function(e) {
-  if (!isDraggingArtistas) return;
-  e.preventDefault();
-  gridArtistas.scrollLeft = scrollStartArtistas - (e.pageX - gridArtistas.offsetLeft - startXArtistas) * 2;
-});
-
-setaMusicaDireita.addEventListener('click', function() {
-  if (indexArtista < itensArtistas.length - 1) indexArtista++;
-  scrollSuaveArtistas(itensArtistas[indexArtista].offsetLeft);
-  atualizarSetasArtistas();
-});
-
-setaMusicaEsquerda.addEventListener('click', function() {
-  if (indexArtista > 0) indexArtista--;
-  scrollSuaveArtistas(itensArtistas[indexArtista].offsetLeft);
-  atualizarSetasArtistas();
-});
-
-function atualizarSetasArtistas() {
-  setaMusicaEsquerda.style.opacity = indexArtista === 0 ? '0' : '1';
-  setaMusicaEsquerda.style.pointerEvents = indexArtista === 0 ? 'none' : 'all';
-  setaMusicaDireita.style.opacity = indexArtista === itensArtistas.length - 1 ? '0' : '1';
-  setaMusicaDireita.style.pointerEvents = indexArtista === itensArtistas.length - 1 ? 'none' : 'all';
-}
-
-atualizarSetasArtistas();
-
-/* ================================
-   PARAR MÍDIA AO TROCAR
-================================ */
-
-function pausarTodosYouTube(exceto) {
-  document.querySelectorAll('iframe[src*="youtube"]').forEach(function(iframe) {
-    if (iframe.contentWindow !== exceto) {
-      iframe.contentWindow.postMessage(
-        JSON.stringify({ event: 'command', func: 'pauseVideo', args: '' }), '*'
-      );
-    }
-  });
-}
-
-function pararTodosSpotify(exceto) {
-  document.querySelectorAll('iframe[src*="spotify"]').forEach(function(iframe) {
-    if (iframe.contentWindow !== exceto) {
-      iframe.src = iframe.src;
-    }
-  });
-}
-
-window.addEventListener('message', function(e) {
-  var data;
-  try { data = JSON.parse(e.data); } catch(err) { return; }
-
-  if (data.type === 'playback_update' && data.payload && !data.payload.isPaused) {
-    pararTodosSpotify(e.source);
-    pausarTodosYouTube(null);
+  function irPara(index) {
+    indexAtual = Math.max(0, Math.min(index, itens.length - 1));
+    animarScroll(container, itens[indexAtual].offsetLeft);
+    setSeta(setaEsq, indexAtual > 0);
+    setSeta(setaDir, indexAtual < itens.length - 1);
   }
 
-  if (data.event === 'infoDelivery' && data.info && data.info.playerState === 1) {
-    pausarTodosYouTube(e.source);
-    pararTodosSpotify(null);
+  let arrastando = false, origemX, scrollInicial;
+
+  container.addEventListener('mousedown', (e) => {
+    arrastando = true;
+    origemX = e.pageX - container.offsetLeft;
+    scrollInicial = container.scrollLeft;
+    container.style.cursor = 'grabbing';
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (!arrastando) return;
+    arrastando = false;
+    container.style.cursor = 'grab';
+    const maisProximo = [...itens].reduce((p, c) =>
+      Math.abs(c.offsetLeft - container.scrollLeft) < Math.abs(p.offsetLeft - container.scrollLeft) ? c : p
+    );
+    irPara([...itens].indexOf(maisProximo));
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (!arrastando) return;
+    e.preventDefault();
+    container.scrollLeft = scrollInicial - (e.pageX - container.offsetLeft - origemX) * 2;
+  });
+
+  setaDir.addEventListener('click', () => irPara(indexAtual + 1));
+  setaEsq.addEventListener('click', () => irPara(indexAtual - 1));
+
+  irPara(0);
+}
+
+criarCarrossel({
+  container: document.querySelector('#clipes .videos-grid'),
+  itens: document.querySelectorAll('.video-item'),
+  setaEsq: document.querySelector('.seta-esquerda'),
+  setaDir: document.querySelector('.seta-direita'),
+});
+
+criarCarrossel({
+  container: document.querySelector('.artistas-carrossel'),
+  itens: document.querySelectorAll('.artista-card'),
+  setaEsq: document.querySelector('.seta-musica-esquerda'),
+  setaDir: document.querySelector('.seta-musica-direita'),
+});
+
+// Controle de mídia: só uma fonte toca por vez
+
+function iframesYouTube() {
+  return [...document.querySelectorAll('iframe[src*="youtube"]')];
+}
+
+function iframesSpotify() {
+  return [...document.querySelectorAll('iframe[src*="spotify"]')];
+}
+
+function enviarPauseYouTube(iframe) {
+  iframe.contentWindow.postMessage(
+    JSON.stringify({ event: 'command', func: 'pauseVideo', args: '' }), '*'
+  );
+}
+
+function recarregarIframe(iframe) {
+  iframe.src = iframe.src;
+}
+
+function pausarOutrosYouTube(janelaTocando) {
+  iframesYouTube().filter(i => i.contentWindow !== janelaTocando).forEach(enviarPauseYouTube);
+}
+
+function pausarTodosYouTube() {
+  iframesYouTube().forEach(enviarPauseYouTube);
+}
+
+function pararOutrosSpotify(janelaTocando) {
+  iframesSpotify().filter(i => i.contentWindow !== janelaTocando).forEach(recarregarIframe);
+}
+
+function pararTodosSpotify() {
+  iframesSpotify().forEach(recarregarIframe);
+}
+
+window.addEventListener('message', (e) => {
+  let data;
+  try { data = JSON.parse(e.data); } catch { return; }
+
+  const spotifyComecou = data.type === 'playback_update' && data.payload && !data.payload.isPaused;
+  const youtubeComecou = data.event === 'infoDelivery' && data.info?.playerState === 1;
+
+  if (spotifyComecou) {
+    pararOutrosSpotify(e.source);
+    pausarTodosYouTube();
+  }
+
+  if (youtubeComecou) {
+    pausarOutrosYouTube(e.source);
+    pararTodosSpotify();
   }
 });
 
-/* ================================
-   MENU HAMBÚRGUER
-================================ */
+// Menu hambúrguer
 
 const menuToggle = document.getElementById('menu-toggle');
 const menu = document.getElementById('menu');
 
-menuToggle.addEventListener('click', function () {
-
+menuToggle.addEventListener('click', () => {
   menuToggle.classList.toggle('active');
   menu.classList.toggle('active');
-
 });
 
-/* FECHAR MENU AO CLICAR */
-
-const linksMenu = document.querySelectorAll('nav a');
-
-linksMenu.forEach(link => {
-
-  link.addEventListener('click', function () {
-
+document.querySelectorAll('nav a').forEach((link) => {
+  link.addEventListener('click', () => {
     menu.classList.remove('active');
     menuToggle.classList.remove('active');
-
   });
-
 });

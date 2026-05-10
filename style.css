@@ -1,30 +1,17 @@
-/* ================================
-   RESET — zera os estilos padrão
-   do navegador pra gente ter
-   controle total
-================================ */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-
-
-/* ================================
-   CORES E FONTES GLOBAIS
-================================ */
 body {
   background-color: #0a0a0a;
   color: #e0e0e0;
-  font-family: Arial, sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 16px;
   padding-top: 96px;
 }
 
-/* ================================
-   HEADER — barra do topo
-================================ */
 header {
   display: flex;
   justify-content: space-between;
@@ -43,37 +30,31 @@ header {
 
 header h1 {
   font-size: 20px;
-  letter-spacing: 4px;          /* espaço entre as letras */
-  text-transform: uppercase;    /* tudo maiúsculo */
+  letter-spacing: 4px;
+  text-transform: uppercase;
   color: #ffffff;
 }
 
-/* ================================
-   NAV — links do menu
-================================ */
 nav {
   display: flex;
-  gap: 32px;                    /* espaço entre os links */
+  gap: 32px;
 }
 
 nav a {
-  color: #888;                  /* cinza */
-  text-decoration: none;        /* remove o sublinhado */
+  color: #888;
+  text-decoration: none;
   font-size: 13px;
   letter-spacing: 1px;
   text-transform: uppercase;
-  transition: color 0.3s;       /* animação suave na cor */
+  transition: color 0.3s;
 }
 
 nav a:hover {
-  color: #ffffff;               /* fica branco quando passa o mouse */
+  color: #ffffff;
 }
 
-/* ================================
-   SECTIONS — seções da página
-================================ */
 section {
-  min-height: 100vh;            /* cada seção ocupa a tela inteira */
+  min-height: 100vh;
   padding: 80px 48px;
   border-bottom: 1px solid #111;
 }
@@ -119,32 +100,27 @@ footer {
   margin: 0 auto 24px auto;
 }
 
-/* ================================
-   HERO — primeira tela
-================================ */
 #inicio {
   background-image: url('imagens/hero.png');
-  background-size: cover;       /* foto cobre a seção inteira */
-  background-position: center;  /* centraliza a foto */
+  background-size: cover;
+  background-position: center;
   background-repeat: no-repeat;
   display: flex;
-  align-items: center;          /* conteúdo centralizado verticalmente */
-  justify-content: center;      /* conteúdo centralizado horizontalmente */
+  align-items: center;
+  justify-content: center;
   position: relative;
 }
 
-/* Camada escura por cima da foto */
 #inicio::before {
   content: '';
   position: absolute;
-  inset: 0;                     /* cobre tudo */
-  background: rgba(0, 0, 0, 0.55); /* preto com 55% de opacidade */
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
 }
 
-/* Conteúdo do hero fica acima da camada escura */
 .hero-content {
   position: relative;
-  z-index: 1;                   /* fica na frente do overlay */
+  z-index: 1;
   text-align: center;
 }
 
@@ -168,7 +144,6 @@ footer {
   text-transform: uppercase;
 }
 
-/* Botão */
 .btn {
   display: inline-block;
   padding: 14px 40px;
@@ -186,29 +161,15 @@ footer {
   color: #000000;
 }
 
-/* ================================
-   FONTE GLOBAL
-================================ */
-body {
-  font-family: 'Inter', sans-serif;
-}
-
 h1, h2 {
   font-family: 'Bebas Neue', sans-serif;
 }
 
-/* ================================
-   LOGO
-================================ */
 .logo {
   height: 48px;
   width: auto;
-  filter: invert(0); /* já é branca, não precisa inverter */
 }
 
-/* ================================
-   SUBTÍTULO DAS SEÇÕES
-================================ */
 .secao-subtitulo {
   font-size: 12px;
   letter-spacing: 3px;
@@ -219,19 +180,15 @@ h1, h2 {
   -webkit-overflow-scrolling: touch;
 }
 
-/* ================================
-   CARROSSEL HORIZONTAL
-================================ */
 .videos-grid {
-  display: flex;              /* coloca tudo em linha */
+  display: flex;
   gap: 24px;
-  overflow-x: auto;           /* permite rolar pra direita */
+  overflow-x: auto;
   padding-bottom: 16px;
-  cursor: grab;               /* cursor de arrastar */
+  cursor: grab;
   scroll-behavior: smooth;
 }
 
-/* Esconde a barra de rolagem mas mantém a função */
 .videos-grid::-webkit-scrollbar {
   display: none
 }
@@ -239,7 +196,7 @@ h1, h2 {
 .video-item {
   min-width: 70vw;
   flex-shrink: 0;
-  pointer-events: none; /* permite o mouse passar pelo iframe */
+  pointer-events: none;
 }
 
 .video-item iframe {
@@ -260,9 +217,6 @@ h1, h2 {
   padding-left: 10px;
 }
 
-/* ================================
-   SETAS DO CARROSSEL
-================================ */
 .carrossel-wrapper {
   position: relative;
 }
@@ -290,20 +244,9 @@ h1, h2 {
   background: rgba(255, 255, 255, 0.2);
 }
 
-.seta-direita {
-  right: 0px;
-}
+.seta-direita { right: 0; }
+.seta-esquerda { left: 0; }
 
-.seta-esquerda {
-  left: 0px;
-}
-
-/* ================================
-   ARTISTAS
-================================ */
-/* ================================
-   CARROSSEL DE ARTISTAS
-================================ */
 .artistas-wrapper {
   position: relative;
   margin-top: 48px;
@@ -363,50 +306,17 @@ h1, h2 {
   padding: 0 24px 24px 24px;
 }
 
-.seta-musica-direita {
-  right: 0px;
+.seta-musica-direita { right: 0; }
+.seta-musica-esquerda { left: 0; }
+
+.spotify-embed {
+  border-radius: 8px;
+  width: 100%;
+  height: 80px;
+  border: none;
 }
 
-.seta-musica-esquerda {
-  left: 0px;
-}
-
-.artista-card {
-  min-width: 70vw;
-  flex-shrink: 0;
-  gap: 24px;
-}
-
-.artista-header {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.artista-foto {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 1px solid #333;
-}
-
-.artista-nome {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 28px;
-  letter-spacing: 3px;
-  color: #ffffff;
-}
-
-.artista-musicas {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-/* ================================
-   CONTATO
-================================ */
+/* CONTATO */
 .contato-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -452,9 +362,6 @@ h1, h2 {
   font-family: 'Inter', sans-serif;
 }
 
-/* ================================
-   SOBRE
-================================ */
 .sobre-wrapper {
   display: flex;
   gap: 64px;
@@ -522,9 +429,6 @@ h1, h2 {
   min-height: auto;
 }
 
-/* ================================
-   EM BREVE
-================================ */
 .em-breve {
   display: flex;
   flex-direction: column;
@@ -550,9 +454,6 @@ h1, h2 {
   text-transform: uppercase;
 }
 
-/* ================================
-   PARCERIAS
-================================ */
 #parcerias {
   min-height: auto;
   padding: 48px;
@@ -608,10 +509,6 @@ h1, h2 {
   color: #666c3c;
 }
 
-/* ================================
-   MENU HAMBÚRGUER
-================================ */
-
 .menu-toggle {
   display: none;
   flex-direction: column;
@@ -629,10 +526,6 @@ h1, h2 {
   background: #ffffff;
   transition: 0.3s;
 }
-
-/* ================================
-   RESPONSIVO MOBILE
-================================ */
 
 @media (max-width: 900px) {
 
@@ -678,7 +571,6 @@ h1, h2 {
     color: #ffffff;
   }
 
-  /* ANIMAÇÃO DO ÍCONE */
   .menu-toggle.active span:nth-child(1) {
     transform: rotate(45deg) translateY(11px);
   }
@@ -690,8 +582,6 @@ h1, h2 {
   .menu-toggle.active span:nth-child(3) {
     transform: rotate(-45deg) translateY(-11px);
   }
-
-  /* AJUSTES MOBILE GERAIS */
 
   section {
     padding: 80px 24px;
