@@ -158,3 +158,37 @@ document.querySelectorAll('nav a').forEach((link) => {
     menuToggle.classList.remove('active');
   });
 });
+
+// ─── LAZY LOAD ───
+
+// Artista capas: carrega background-image só quando entra na tela
+const observadorBg = new IntersectionObserver((entradas) => {
+  entradas.forEach((entrada) => {
+    if (!entrada.isIntersecting) return;
+    const el = entrada.target;
+    const url = el.dataset.bg;
+    if (!url) return;
+
+    const img = new Image();
+    img.onload = () => {
+      el.style.backgroundImage = `url('${url}')`;
+      el.classList.add('loaded');
+    };
+    img.src = url;
+
+    observadorBg.unobserve(el);
+  });
+}, { rootMargin: '200px' });
+
+document.querySelectorAll('.skeleton-bg[data-bg]').forEach((el) => {
+  observadorBg.observe(el);
+});
+
+// Imagens normais com .img-fade: adiciona classe "loaded" ao carregar
+document.querySelectorAll('.img-fade').forEach((img) => {
+  if (img.complete && img.naturalWidth > 0) {
+    img.classList.add('loaded');
+  } else {
+    img.addEventListener('load', () => img.classList.add('loaded'));
+  }
+});

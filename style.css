@@ -625,3 +625,32 @@ h1, h2 {
   }
 
 }
+
+/* ─── LAZY LOAD & SKELETON ─── */
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+.skeleton-bg {
+  background: linear-gradient(90deg, #111 25%, #1c1c1c 50%, #111 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s infinite linear;
+  transition: background 0.4s ease;
+}
+
+.skeleton-bg.loaded {
+  animation: none;
+  background: none;
+}
+
+/* imagens normais: começam invisíveis, aparecem ao carregar */
+.img-fade {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.img-fade.loaded {
+  opacity: 1;
+}
