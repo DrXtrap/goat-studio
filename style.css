@@ -642,7 +642,7 @@ h1, h2 {
 
 .skeleton-bg.loaded {
   animation: none;
-  background: none;
+  none; por background-image: none;
 }
 
 /* imagens normais: começam invisíveis, aparecem ao carregar */
