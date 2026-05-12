@@ -173,6 +173,17 @@ const observadorBg = new IntersectionObserver((entradas) => {
     img.onload = () => {
       el.style.backgroundImage = `url('${url}')`;
       el.classList.add('loaded');
+
+      if (typeof smartcrop !== 'undefined') {
+        smartcrop.crop(img, { width: 100, height: 160 })
+          .then((resultado) => {
+            const c = resultado.topCrop;
+            const x = ((c.x + c.width / 2) / img.naturalWidth) * 100;
+            const y = ((c.y + c.height / 2) / img.naturalHeight) * 100;
+            el.style.backgroundPosition = `${x.toFixed(1)}% ${y.toFixed(1)}%`;
+          })
+          .catch(() => {});
+      }
     };
     img.src = url;
 
